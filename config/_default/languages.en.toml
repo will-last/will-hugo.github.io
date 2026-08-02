@@ -1,0 +1,22 @@
+locale = "en"
+label = "English"
+weight = 2
+title = "Will's Blog"
+
+[params]
+  displayName = "English"
+  isoCode = "en"
+  rtl = false
+  dateFormat = "2 January 2006"
+  logo = "img/blowfish_logo_transparent.png"
+  description = "A personal blog powered by Hugo and Blowfish"
+
+[params.author]
+  name = "Will"
+  email = ""
+  image = "img/blowfish_logo.png"
+  headline = "A personal blog"
+  bio = "Welcome to my blog. I write about technology and life."
+  links = [
+    { github = "https://github.com/will-last" },
+  ]
