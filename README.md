@@ -120,7 +120,7 @@ git commit -m "更新内容"
 git push origin main
 ```
 
-部署完成后访问：https://yellow-water-0e536b200.azurestaticapps.net
+部署完成后访问：https://yellow-water-0e536b200.7.azurestaticapps.net
 
 ### 6.2 GitHub Pages（旧方案）
 

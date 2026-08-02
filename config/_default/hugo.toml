@@ -3,7 +3,7 @@
 # https://blowfish.page/docs/getting-started/
 
 theme = "blowfish"
-baseURL = "https://will-last.github.io/will-hugo.github.io"
+baseURL = "https://yellow-water-0e536b200.7.azurestaticapps.net"
 defaultContentLanguage = "zh-cn"
 disableLanguages = []
 
