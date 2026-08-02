@@ -1,6 +1,6 @@
 # Will's Blog
 
-基于 [Hugo](https://gohugo.io/) 和 [Blowfish](https://blowfish.page/) 主题的个人博客，托管于 GitHub Pages，通过 GitHub Actions 自动部署。
+基于 [Hugo](https://gohugo.io/) 和 [Blowfish](https://blowfish.page/) 主题的个人博客，托管于 Azure Static Web Apps，通过 GitHub Actions 自动部署。
 
 ---
 
@@ -10,25 +10,11 @@
 - [1. 功能特性](#1-功能特性)
 - [2. 环境要求](#2-环境要求)
 - [3. 本地配置](#3-本地配置)
-  - [3.1 克隆仓库](#31-克隆仓库)
-  - [3.2 本地预览](#32-本地预览)
 - [4. 基本操作](#4-基本操作)
-  - [4.1 创建新文章](#41-创建新文章)
-  - [4.2 文章编写](#42-文章编写)
-  - [4.3 本地构建](#43-本地构建)
-  - [4.4 目录结构](#44-目录结构)
 - [5. TRAE 集成技能](#5-trae-集成技能)
 - [6. 部署](#6-部署)
-  - [6.1 自动部署（推荐）](#61-自动部署推荐)
-  - [6.2 部署流程](#62-部署流程)
 - [7. 自定义配置](#7-自定义配置)
-  - [7.1 修改站点信息](#71-修改站点信息)
-  - [7.2 修改个人资料](#72-修改个人资料)
-  - [7.3 修改主题配色](#73-修改主题配色)
 - [8. 常见问题](#8-常见问题)
-  - [8.1 本地预览看不到最新主题效果？](#81-本地预览看不到最新主题效果)
-  - [8.2 构建报错？](#82-构建报错)
-  - [8.3 如何切换主题？](#83-如何切换主题)
 - [9. 相关资源](#9-相关资源)
 - [10. 许可](#10-许可)
 
@@ -43,7 +29,7 @@
 - 全文搜索
 - 标签、分类、作者等分类体系
 - 响应式设计，适配移动端
-- 自动部署到 GitHub Pages
+- 自动部署到 Azure Static Web Apps（国内访问更稳定）
 
 ## 2. 环境要求
 
@@ -53,105 +39,80 @@
 
 ## 3. 本地配置
 
-### 3.1 克隆仓库
+克隆仓库并拉取子模块：
 
 ```bash
 git clone --recurse-submodules https://github.com/will-last/will-hugo.github.io.git
 cd will-hugo.github.io
 ```
 
-> `--recurse-submodules` 参数会同时拉取 Blowfish 主题子模块。如果已克隆但忘记加此参数，执行：
-> ```bash
-> git submodule update --init --recursive
-> ```
+> 如果已克隆但忘记加 `--recurse-submodules`，执行 `git submodule update --init --recursive`。
 
-### 3.2 本地预览
-
-启动 Hugo 开发服务器，实时预览修改：
+启动 Hugo 开发服务器实时预览修改：
 
 ```bash
 hugo server --buildDrafts
 ```
 
-启动后访问 http://localhost:1313 即可看到博客。修改内容后浏览器会自动刷新。
+启动后访问 http://localhost:1313 ，修改内容后浏览器会自动刷新。
 
 ## 4. 基本操作
 
-### 4.1 创建新文章
+**创建新文章：**
 
 ```bash
 hugo new content posts/文章标题/index.md
 ```
 
-会在 `content/posts/文章标题/` 目录下生成一个 Markdown 文件，文件头包含以下元数据：
+生成的文件头包含元数据，将 `draft` 改为 `false` 即可发布：
 
 ```yaml
 ---
 title: "文章标题"
 date: 2026-01-01
-draft: true           # true 表示草稿，本地预览需加 --buildDrafts
+draft: true
 description: "文章描述"
 tags: ["标签1", "标签2"]
 categories: ["分类名"]
 ---
 ```
 
-将 `draft` 改为 `false` 即可发布。
+**文章编写：** 使用 Markdown 语法，图片放在 `assets/img/` 目录下，引用方式 `![描述](/img/图片名.png)`。Blowfish 支持丰富的短代码，详见 [Blowfish 文档](https://blowfish.page/docs/shortcodes/)。
 
-### 4.2 文章编写
-
-- 使用 Markdown 语法编写
-- 文章图片放在 `assets/img/` 目录下，引用方式：`![图片描述](/img/图片名.png)`
-- Blowfish 主题支持丰富的短代码（Shortcodes），如警告框、代码块、图表等，详见 [Blowfish 文档](https://blowfish.page/docs/shortcodes/)
-
-### 4.3 本地构建
+**本地构建验证：**
 
 ```bash
 hugo --gc --minify
 ```
 
-构建生成的静态文件在 `public/` 目录下，可用于本地验证最终效果。
+构建产物在 `public/` 目录。
 
-### 4.4 目录结构
+**目录结构：**
 
 ```
 ├── .trae/skills/              # TRAE 集成技能
-│   └── hugo-blowfish-blog/    # 博客搭建工作流技能
 ├── config/_default/           # 站点配置
 │   ├── hugo.toml              # 主配置
 │   ├── params.toml            # 主题参数
-│   ├── languages.en.toml      # 英文语言配置
-│   ├── languages.zh-cn.toml   # 中文语言配置
-│   ├── markup.toml            # Markdown 渲染配置
-│   ├── menus.en.toml          # 英文菜单
-│   └── menus.zh-cn.toml       # 中文菜单
+│   ├── languages.*.toml       # 语言配置（中英文）
+│   ├── markup.toml            # Markdown 渲染
+│   └── menus.*.toml           # 菜单配置
 ├── content/                   # 文章内容
-│   ├── _index.md              # 首页
-│   └── posts/                 # 文章目录
 ├── themes/blowfish/           # Blowfish 主题（子模块）
 ├── static/                    # 静态文件
-├── assets/                    # 资源文件（图片、CSS、JS）
+├── assets/                    # 资源文件
 └── .github/workflows/         # GitHub Actions 部署配置
 ```
 
 ## 5. TRAE 集成技能
 
-本仓库内置了 **TRAE 集成技能**（位于 `.trae/skills/hugo-blowfish-blog/`），记录了从零搭建 Hugo + Blowfish 博客并部署到 GitHub Pages 的完整工作流。在 [TRAE IDE](https://www.trae.ai/) 中打开此项目后，可直接调用该技能自动完成博客搭建流程。
-
-技能内容涵盖：
-
-- Windows 环境检测与 PATH 配置
-- Hugo 站点初始化与 Blowfish 主题安装
-- 站点配置文件生成
-- GitHub Actions 自动化部署配置
-- README 文档生成规范
-- 常见故障排查
+本仓库内置了 **TRAE 集成技能**（位于 `.trae/skills/hugo-blowfish-blog/`），记录了从零搭建 Hugo + Blowfish 博客并部署的全流程。在 [TRAE IDE](https://www.trae.ai/) 中打开此项目后，可直接调用该技能自动完成搭建。
 
 ## 6. 部署
 
-### 6.1 自动部署（推荐）
+### 6.1 Azure Static Web Apps（当前方案）
 
-代码推送到 `main` 分支后，GitHub Actions 会自动构建并部署到 GitHub Pages。
+博客托管在 Azure Static Web Apps（免费层），国内访问更稳定。推送到 `main` 分支后自动触发构建部署：
 
 ```bash
 git add .
@@ -159,80 +120,40 @@ git commit -m "更新内容"
 git push origin main
 ```
 
-部署完成后访问：https://will-last.github.io/will-hugo.github.io/
+部署完成后访问：https://yellow-water-0e536b200.azurestaticapps.net
 
-### 6.2 部署流程
+### 6.2 GitHub Pages（旧方案）
+
+原 GitHub Pages 部署已在切换 Azure 后移除。如需重新启用，在仓库 Settings → Pages 中选择 GitHub Actions 作为部署源，并恢复 `.github/workflows/deploy.yml` 工作流。
+
+### 6.3 部署流程
 
 1. 推送到 `main` 分支
 2. GitHub Actions 自动触发构建
-3. 构建完成后部署到 GitHub Pages
+3. Azure Static Web Apps 自动部署上线
 4. 可在仓库 Actions 标签页查看构建状态
 
 ## 7. 自定义配置
 
-### 7.1 修改站点信息
+**修改站点信息：** 编辑 `config/_default/hugo.toml`，修改 `baseURL` 和 `defaultContentLanguage`。
 
-编辑 `config/_default/hugo.toml`：
+**修改个人资料：** 编辑 `config/_default/languages.zh-cn.toml` 中的 `[params.author]` 部分，包括名称、头像、简介和社交链接。
 
-```toml
-baseURL = "https://will-last.github.io/will-hugo.github.io"
-defaultContentLanguage = "zh-cn"
-```
-
-### 7.2 修改个人资料
-
-编辑 `config/_default/languages.zh-cn.toml` 中的 `[params.author]` 部分：
-
-```toml
-[params.author]
-  name = "Will"
-  image = "img/blowfish_logo.png"
-  headline = "个人博客"
-  bio = "欢迎来到我的博客，记录技术与生活。"
-  links = [
-    { github = "https://github.com/will-last" },
-  ]
-```
-
-### 7.3 修改主题配色
-
-编辑 `config/_default/params.toml`，修改 `colorScheme` 字段：
-
-```toml
-colorScheme = "blowfish"  # 可选: blowfish, ocean, forest, fire, slate, noir 等
-```
-
-完整配色方案列表见 `themes/blowfish/assets/css/schemes/` 目录。
+**修改主题配色：** 编辑 `config/_default/params.toml` 中的 `colorScheme` 字段，可选值包括 `blowfish`、`ocean`、`forest`、`fire`、`slate`、`noir` 等，完整列表见 `themes/blowfish/assets/css/schemes/`。
 
 ## 8. 常见问题
 
-### 8.1 本地预览看不到最新主题效果？
+**本地预览看不到最新主题效果？** 确保主题子模块已正确拉取：`git submodule update --init --recursive`。
 
-确保主题子模块已正确拉取：
+**构建报错？** 确认使用的是 Hugo **Extended** 版本（`hugo version`），并检查工作流中的 `HUGO_VERSION` 与本地版本一致。
 
-```bash
-git submodule update --init --recursive
-```
-
-### 8.2 构建报错？
-
-- 确认使用的是 Hugo **Extended** 版本：`hugo version`
-- 确认 Hugo 版本与工作流中配置的一致（`HUGO_VERSION` in `.github/workflows/deploy.yml`）
-
-### 8.3 如何切换主题？
-
-Hugo 支持多种主题，更换主题的操作步骤：
-
-1. 删除 `themes/blowfish` 子模块
-2. 添加新的主题子模块
-3. 修改 `config/_default/hugo.toml` 中的 `theme` 字段
-4. 根据新主题的文档调整配置
+**如何切换主题？** 删除 `themes/blowfish` 子模块，添加新的主题子模块，修改 `hugo.toml` 中的 `theme` 字段，根据新主题文档调整配置。
 
 ## 9. 相关资源
 
 - [Hugo 官方文档](https://gohugo.io/documentation/)
 - [Blowfish 主题文档](https://blowfish.page/docs/)
-- [Blowfish GitHub 仓库](https://github.com/nunocoracao/blowfish)
+- [Azure Static Web Apps 文档](https://learn.microsoft.com/zh-cn/azure/static-web-apps/)
 
 ## 10. 许可
 
