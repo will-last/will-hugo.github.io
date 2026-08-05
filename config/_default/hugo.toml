@@ -19,6 +19,9 @@ enableEmoji = true
 [pagination]
   pagerSize = 102
 
+[params]
+  customCSS = ["css/custom.css"]
+
 [imaging]
   anchor = 'Center'
 

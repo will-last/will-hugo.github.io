@@ -1,4 +1,33 @@
-/* 修复代码块被截断问题：允许横向滚动而非隐藏溢出 */
-.highlight-wrapper {
+
+/* 全局修改文章正文内容宽度 */
+article .article-content {
+  /* 默认75ch，改成90ch/100ch，数值越大内容区越宽 */
+  max-width: 95ch !important;
+}
+
+/* 文章顶部标题区同步加宽，和正文对齐 */
+#single_header {
+  max-width: 98ch !important;
+}
+
+/* 代码块、流程图图片容器适配加宽，避免左右留白 */
+.article-content pre,
+.article-content figure,
+.article-content img {
+  max-width: 100% !important;
+}
+
+/* 侧边左右内边距微调，减少两侧空白 */
+@media screen and (min-width: 768px) {
+  :root {
+    --page-padding: 2rem;
+    /* 默认3rem，缩小左右边距 */
+  }
+}
+
+/* 代码块横向放宽，支持长代码横向完整展示 */
+.article-content pre {
+  max-width: 100%;
   overflow-x: auto;
+  /* 超长代码横向滚动，不会挤压缩小 */
 }
