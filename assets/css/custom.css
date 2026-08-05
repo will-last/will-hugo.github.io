@@ -1,0 +1,4 @@
+/* 修复代码块被截断问题：允许横向滚动而非隐藏溢出 */
+.highlight-wrapper {
+  overflow-x: auto;
+}
